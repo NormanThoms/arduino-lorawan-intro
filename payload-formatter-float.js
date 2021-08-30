@@ -1,8 +1,8 @@
 /*
 Sample data:
-Temperature = 27.03 °C
+Temperature = 27.03 °F
 Humidity    = 56.49 %
-Pressure    = 97.51 kPa
+Pressure    = 97.51 psi
 Illuminance = 40.00 lx
 */
 
@@ -23,9 +23,9 @@ function decodeUplink(input) {
 
     var data = {
         bytes: input.bytes,
-        temperature: sensorData[0] + " °C",
+        temperature: sensorData[0] + " °F",
         humidity: sensorData[1] + " %",
-        pressure: sensorData[2] + " kPa",
+        pressure: sensorData[2] + " psi",
         illuminance: sensorData[3] + " lx"
     };
 
