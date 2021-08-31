@@ -32,7 +32,7 @@ void setup() {
   }  
 
   // change this to your regional band (eg. US915, AS923, ...)
-  if (!modem.begin(EU868)) {
+  if (!modem.begin(US915)) {
     Serial.println("Failed to start module");
     while (1) {}
   };
@@ -41,6 +41,12 @@ void setup() {
 }
 
 void connectToLoRaWAN(){
+  // Enable US915-928 channels
+  // LoRaWAN® Regional Parameters and TTN specification: channels 8 to 15 plus 65 
+  modem.sendMask("ff000001f000ffff00020000");
+  Serial.println(modem.getChannelMask());
+  modem.setADR(true);
+  
   Serial.println("Connecting...");
   int connected = modem.joinOTAA(APP_EUI, APP_KEY);
 
@@ -66,7 +72,7 @@ void sendSensorValues(){
   if (error > 0) {
     Serial.println("Message sent correctly!");
   } else {
-    Serial.println("Error sending message :(");
+    Serial.println("Error sending message!");
   }
   
   Serial.println();
@@ -74,15 +80,15 @@ void sendSensorValues(){
 
 void loop() {
   // read all the sensor values
-  temperature = ENV.readTemperature();
+  temperature = ENV.readTemperature(FAHRENHEIT);
   humidity    = ENV.readHumidity();
-  pressure    = ENV.readPressure();
-  illuminance = ENV.readIlluminance();
+  pressure    = ENV.readPressure(PSI);
+  illuminance = ENV.readIlluminance(LUX);
 
   // print each of the sensor values
   Serial.print("Temperature = ");
   Serial.print(temperature);
-  Serial.println(" °C");
+  Serial.println(" °F");
 
   Serial.print("Humidity    = ");
   Serial.print(humidity);
@@ -90,7 +96,7 @@ void loop() {
 
   Serial.print("Pressure    = ");
   Serial.print(pressure);
-  Serial.println(" kPa");
+  Serial.println(" psi");
 
   Serial.print("Illuminance = ");
   Serial.print(illuminance);
